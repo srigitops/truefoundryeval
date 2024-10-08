@@ -1,0 +1,32 @@
+name: nginx-test4
+type: service
+image:
+  type: build
+  build_spec:
+    type: dockerfile
+    dockerfile_path: ./Dockerfile
+    build_context_path: ./
+  # `build_source.branch_name` and `build_source.ref` will automatically be patched during deployment.
+  build_source:
+    ref: 8092a3faa44d23cc3c6f9fd298def919e9939457
+    type: git
+    repo_url: https://github.com/srigitops/truefoundryeval
+    branch_name: main
+ports:
+  - host: truefoundry-poc-compute.ai.synopsys.com
+    path: /nginx-test4-demows1-80/
+    port: 80
+    expose: true
+    protocol: TCP
+    app_protocol: http
+mounts: []
+replicas: 1
+resources:
+  node:
+    type: nodepool_selector
+  cpu_limit: 0.5
+  cpu_request: 0.2
+  memory_limit: 500
+  memory_request: 200
+  ephemeral_storage_limit: 2000
+  ephemeral_storage_request: 1000
