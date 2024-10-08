@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: llm-leaderboard-deployment
+  labels:
+    timestamp: "{{ now | unixEpoch }}"
+    pliny.service: llm-leaderboard
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      pliny.service: llm-leaderboard
+  template:
+    name: llm-leaderboard-deployment-template
+    metadata:
+      labels:
+        timestamp: "{{ now | unixEpoch }}"
+        pliny.service: llm-leaderboard
+    spec:
+      imagePullSecrets:
+        - name: azureregcred
+      containers:
+        - name: llm-leaderboard-container
+          imagePullPolicy: Always
+          image: tfycontainerregistry.azurecr.io/llm_leaderboard:latest
+          ports:
+            - containerPort: 7860
+              hostPort: 80
+              protocol: TCP
+      restartPolicy: Always
+---
